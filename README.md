@@ -27,6 +27,6 @@ Crie um CRUD de grafos com cordenadas geograficas(pontos ou poligonos) que deve 
 
 ## Como entregar
 
-Você deve crie uma branch separada da main neste repositório e abra um pull request marcaando o avaliador como reviewer, seu pr deve seguir os padrões adequados. Não esqueça de fazer self review!
+Você deve crie uma branch separada da main neste repositório e abra um pull request marcando o avaliador como reviewer, seu pr deve seguir os padrões adequados e deve ser aberto até o dia 02/02/2024, sexta feira. Não esqueça de fazer self review!
 
 Bom desafio!
