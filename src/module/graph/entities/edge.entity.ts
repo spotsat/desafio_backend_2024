@@ -19,13 +19,13 @@ export class EdgeEntity {
   @Column()
   name: string;
 
-  @ManyToOne(() => PointEntity, (point) => point.id)
-  @JoinColumn({ name: 'originId' })
-  originId: number;
+  @ManyToOne(() => PointEntity)
+  @JoinColumn({ name: 'origin' })
+  origin: PointEntity;
 
   @ManyToOne(() => PointEntity)
-  @JoinColumn({ name: 'destinyId' })
-  destinyId: number;
+  @JoinColumn({ name: 'destiny' })
+  destiny: PointEntity;
 
   @Column('geography', {
     srid: 4326,
@@ -34,7 +34,10 @@ export class EdgeEntity {
   })
   line: LineString;
 
-  @ManyToOne(() => GraphEntity, (graph) => graph.id)
-  @JoinColumn({ name: 'graphId' })
-  graphId: number;
+  @Column()
+  distance: number;
+
+  @ManyToOne(() => GraphEntity)
+  @JoinColumn({ name: 'graph' })
+  graph: GraphEntity;
 }

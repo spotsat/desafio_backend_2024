@@ -40,8 +40,8 @@ export class GraphService {
 
       if (!pointsToBeCreated.find((p) => p.id === point.vertexId)) {
         pointsToBeCreated.push({
-          id: point.vertexId,
-          graphId: createGraph.id,
+          id: undefined,
+          graph: createGraph,
           location: point.data,
           name: 'default',
         });
@@ -57,7 +57,8 @@ export class GraphService {
     for (const edge of data.edges) {
       if (
         !edgesToBeCreated.find(
-          (e) => e.originId === edge.originId && e.destinyId === edge.destinyId,
+          (e) =>
+            e.origin.id === edge.originId && e.destiny.id === edge.destinyId,
         )
       ) {
         const originVertex = data.vertices.find(
@@ -73,11 +74,19 @@ export class GraphService {
           );
         }
 
+        const originPoint: PointEntity = pointsToBeCreated.find(
+          (p) => p.location === originVertex.data,
+        );
+
+        const destinyPoint: PointEntity = pointsToBeCreated.find(
+          (p) => p.location === destinyVertex.data,
+        );
+
         edgesToBeCreated.push({
           id: undefined,
           name: 'default',
-          originId: edge.originId,
-          destinyId: edge.destinyId,
+          origin: originPoint,
+          destiny: destinyPoint,
           line: {
             type: 'LineString',
             coordinates: [
@@ -85,7 +94,8 @@ export class GraphService {
               destinyVertex.data.coordinates,
             ],
           },
-          graphId: createGraph.id,
+          distance: 0,
+          graph: createGraph,
         });
       } else {
         throw new BadRequestException(
@@ -101,15 +111,17 @@ export class GraphService {
         EdgeEntity,
         edgesToBeCreated.map((edge) => {
           return {
-            originId: edge.originId,
-            destinyId: edge.destinyId,
+            origin: edge.origin,
+            destiny: edge.destiny,
             name: edge.name,
-            graphId: createGraph.id,
+            graph: createGraph,
             line: edge.line,
+            distance: edge.distance,
           };
         }),
       );
       await queryRunner.commitTransaction();
+      return this.readGraph(createGraph.id);
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -120,38 +132,158 @@ export class GraphService {
 
   async readGraph(id: number) {
     try {
-      const res = await this.edgeRepository.find({
+      const graph = await this.graphRepository.findOne({
         where: {
-          graphId: id,
+          id,
         },
-        relations: ['originId', 'destinyId'],
-        select: ['id', 'name', 'originId', 'destinyId'],
       });
-      if (!res) throw new Error('Graph not found');
+      if (!graph) throw new Error('Graph not found');
+      const edges = await this.edgeRepository.find({
+        where: {
+          graph: { id },
+        },
+        relations: ['origin', 'destiny'],
+      });
+      if (!edges) throw new Error('Graph not found');
+      const points = await this.pointRepository.find({
+        where: {
+          graph: { id },
+        },
+      });
+      if (!points) throw new Error('Graph not found');
 
-      return res;
-    } catch (error) {
-      throw new Error('Error while reading graph');
+      return {
+        id: graph.id,
+        name: graph.name,
+        vertices: points.map((point) => {
+          return {
+            id: point.id,
+            name: point.name,
+            location: point.location,
+          };
+        }),
+        edges: edges.map((edge) => {
+          return {
+            id: edge.id,
+            name: edge.name,
+            origin: {
+              id: edge.origin.id,
+              location: edge.origin.location,
+            },
+            destiny: {
+              id: edge.destiny.id,
+              location: edge.destiny.location,
+            },
+          };
+        }),
+      };
+    } catch (error: any) {
+      throw new BadRequestException(error.message);
     }
   }
 
   async shortestPath(id: number, originId: number, destinyId: number) {
-    const graph = new Graph();
+    try {
+      originId = Number(originId);
+      destinyId = Number(destinyId);
+
+      const graphPathsExists = await this.verifyPathGraph(
+        id,
+        originId,
+        destinyId,
+      );
+      if (!graphPathsExists) return;
+
+      const graph = new Graph();
+
+      const edges: any[] = await this.edgeRepository.find({
+        where: {
+          graph: { id },
+        },
+        relations: ['origin', 'destiny'],
+      });
+
+      const points: any = await this.pointRepository.find({
+        where: {
+          graph: { id },
+        },
+      });
+
+      // Adiciona os vértices e arestas ao grafo
+
+      points.map((point) => {
+        graph.addVertex(point.id, point.location.coordinates);
+      });
+
+      edges.map((edge) => {
+        const edgeLenght = edge.line.coordinates.reduce((acc, curr, index) => {
+          if (index === 0) return acc;
+          const [x1, y1] = edge.line.coordinates[index - 1];
+          const [x2, y2] = curr;
+          const x = x2 - x1;
+          const y = y2 - y1;
+          return acc + Math.sqrt(x * x + y * y);
+        }, 0);
+        this.getDistanceBetweenPoints(
+          edge.origin.location.coordinates,
+          edge.destiny.location.coordinates,
+        );
+
+        graph.addEdge(edge.origin.id, edge.destiny.id, edgeLenght);
+      });
+
+      // Encontra o melhor caminho
+
+      const bestPath = graph.findBestPath({
+        originId,
+        destinyId,
+      });
+
+      return bestPath.map((path) => {
+        const newPoint = points.find((point) => point.id === path);
+        return {
+          id: newPoint.id,
+          name: newPoint.name,
+          location: newPoint.location,
+        };
+      });
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async allPaths(
+    id: number,
+    originId: number,
+    destinyId: number,
+    limitStop: number,
+  ) {
     originId = Number(originId);
     destinyId = Number(destinyId);
 
+    const graphPathsExists = await this.verifyPathGraph(
+      id,
+      originId,
+      destinyId,
+    );
+    if (!graphPathsExists) return;
+
+    const graph = new Graph();
+
     const edges: any[] = await this.edgeRepository.find({
       where: {
-        graphId: id,
+        graph: { id },
       },
-      relations: ['originId', 'destinyId'],
+      relations: ['origin', 'destiny'],
     });
 
     const points: any = await this.pointRepository.find({
       where: {
-        graphId: id,
+        graph: { id },
       },
     });
+
+    // Adiciona os vértices e arestas ao grafo
 
     points.map((point) => {
       graph.addVertex(point.id, point.location.coordinates);
@@ -167,28 +299,119 @@ export class GraphService {
         return acc + Math.sqrt(x * x + y * y);
       }, 0);
 
-      graph.addEdge(edge.originId.id, edge.destinyId.id, edgeLenght);
+      graph.addEdge(edge.origin.id, edge.destiny.id, edgeLenght);
     });
-    console.log('originId', originId);
-    console.log('destinyId', destinyId);
-    const bestPath = graph.findBestPath({
+
+    // Encontra todos os caminhos
+
+    const allPaths = graph.listAllPaths({
       originId,
       destinyId,
     });
-    console.log(bestPath);
-    console.log(points);
 
-    return bestPath.map((path) => {
-      const newPoint = points.find((point) => point.id === path);
-      return {
-        id: newPoint.id,
-        name: newPoint.name,
-        location: newPoint.location,
+    // Retorna os caminhos com no máximo 'limitStop' paradas
+
+    return allPaths.map((path, index) => {
+      path.length <= limitStop + 2 && {
+        route: index + 1,
+        path: path.map((vertexId) => {
+          const newPoint = points.find((point) => point.id === vertexId);
+          return {
+            id: newPoint.id,
+            name: newPoint.name,
+            location: newPoint.location,
+          };
+        }),
       };
     });
   }
+
+  async verifyPathGraph(id: number, originId: number, destinyId: number) {
+    // Verifica se os pontos existem no grafo
+
+    const originExists = await this.pointRepository.findOne({
+      where: {
+        id: originId,
+        graph: { id },
+      },
+    });
+
+    const destinyExists = await this.pointRepository.findOne({
+      where: {
+        id: destinyId,
+        graph: { id },
+      },
+    });
+
+    // Verifica se o grafo existe
+
+    const graphExists = await this.graphRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!graphExists) throw new BadRequestException('Graph not found');
+
+    if (!originExists || !destinyExists)
+      throw new BadRequestException('Invalid origin or destiny');
+
+    return true;
+  }
+
+  async deleteGraph(id: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const graph = await this.graphRepository.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!graph) throw new BadRequestException('Graph not found');
+
+      await queryRunner.manager.delete(EdgeEntity, {
+        graph: { id },
+      });
+
+      await queryRunner.manager.delete(PointEntity, {
+        graph: { id },
+      });
+
+      await queryRunner.manager.delete(GraphEntity, {
+        id,
+      });
+
+      await queryRunner.commitTransaction();
+
+      return {
+        message: 'Graph deleted',
+      };
+    } catch (error) {
+      console.log(error);
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException('Error while deleting graph');
+    }
+  }
+
+  async getDistanceBetweenPoints(
+    originCoordinates: number[],
+    destinyCoordinates: number[],
+  ) {
+    const distance = await this.dataSource.query(
+      `SELECT ST_Distance(ST_Transform('SRID=4326;POINT($1, $2)'::geometry, 3857),
+            ST_Transform('SRID=4326;POINT($3, $4)'::geometry, 3857)
+          );`,
+      [
+        originCoordinates[0],
+        originCoordinates[1],
+        destinyCoordinates[0],
+        destinyCoordinates[1],
+      ],
+    );
+    console.log(distance);
+    return distance;
+  }
 }
-// const result = await this.pointRepository.manager.query(
-//   `INSERT INTO points (name, location) VALUES ('default',ST_SetSRID(ST_GeomFromGeoJSON($1), 4326))`,
-//   [point],
-// );

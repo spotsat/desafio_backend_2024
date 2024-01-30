@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -35,13 +36,41 @@ export class GraphController {
   }
 
   @Get(':id/shortest-path')
-  async readAllRoutes(
+  async readShortestPath(
     @ParamId() id: number,
     @Query('originId') originId: number,
     @Query('destinyId') destinyId: number,
   ) {
     try {
       return this.graphService.shortestPath(Number(id), originId, destinyId);
+    } catch (error) {
+      return new BadRequestException(error);
+    }
+  }
+
+  @Get(':id/all-paths')
+  async listAllPaths(
+    @ParamId() id: number,
+    @Query('originId') originId: number,
+    @Query('destinyId') destinyId: number,
+    @Query('limitStop') limitStop: number,
+  ) {
+    try {
+      return this.graphService.allPaths(
+        Number(id),
+        Number(originId),
+        Number(destinyId),
+        Number(limitStop),
+      );
+    } catch (error) {
+      return new BadRequestException(error);
+    }
+  }
+
+  @Delete(':id')
+  async delete(@ParamId() id: number) {
+    try {
+      return this.graphService.deleteGraph(id);
     } catch (error) {
       return new BadRequestException(error);
     }

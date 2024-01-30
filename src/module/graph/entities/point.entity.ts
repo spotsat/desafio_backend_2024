@@ -4,7 +4,7 @@ import {
   Geography,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { GraphEntity } from './graph.entity';
 
@@ -12,7 +12,7 @@ import { GraphEntity } from './graph.entity';
   name: 'points',
 })
 export class PointEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -25,7 +25,7 @@ export class PointEntity {
   })
   location: Geography;
 
-  @ManyToOne(() => GraphEntity, (graph) => graph.id)
-  @JoinColumn({ name: 'graphId' })
-  graphId: number;
+  @ManyToOne(() => GraphEntity)
+  @JoinColumn({ name: 'graph' })
+  graph: GraphEntity;
 }

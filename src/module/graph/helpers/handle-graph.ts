@@ -92,46 +92,30 @@ export class Graph {
     return []; // Retorna um array vazio se não encontrar um path
   }
 
-  listAllPaths({
-    originId,
-    destinyId,
-  }: {
-    originId: number;
-    destinyId: number;
-  }) {
-    const queue: any[] = [];
-    const visited: Set<number> = new Set();
-    const path: number[] = [];
-    const predecessors: Map<number, number> = new Map();
-    const paths: number[][] = [];
+  listAllPaths({ originId, destinyId }) {
+    const paths = [];
+    const path = [];
 
-    queue.push(this.vertices.get(originId));
-    visited.add(originId);
+    const dfs = (vertexId) => {
+      path.push(vertexId);
 
-    while (queue.length > 0) {
-      const actualVertex = queue.shift();
-      if (actualVertex.id === destinyId) {
-        let vertexPath = actualVertex.id;
-        while (vertexPath !== originId) {
-          path.unshift(vertexPath);
-          vertexPath = predecessors.get(vertexPath);
-        }
-        path.unshift(originId);
-        paths.push(path.map((id) => this.vertices.get(id).id));
-        path.shift();
+      if (vertexId === destinyId) {
+        paths.push([...path]);
+      } else {
+        const actualVertex = this.vertices.get(vertexId);
+        actualVertex.edges.forEach((edge) => {
+          if (!path.includes(edge.destiny.id)) {
+            dfs(edge.destiny.id);
+          }
+        });
       }
 
-      actualVertex.edges.forEach((edge: HelperEdge) => {
-        const idDestino = edge.destiny.id;
-        if (!visited.has(idDestino)) {
-          visited.add(idDestino);
-          queue.push(edge.destiny);
-          predecessors.set(idDestino, actualVertex.id);
-        }
-      });
-    }
+      path.pop();
+    };
 
-    return paths; // Retorna um array vazio se não encontrar um path
+    dfs(originId);
+
+    return paths;
   }
   viewVertices() {
     return this.vertices;
