@@ -408,7 +408,13 @@ export class GraphService {
     destinyCoordinates: number[],
   ) {
     const distance = await this.dataSource.query(
-      `SELECT ST_Distance(ST_SetSRID(ST_MakePoint(-46.6333, -23.5505), 4326)::geography,ST_SetSRID(ST_MakePoint(-46.6079, -23.5513), 4326)::geography) AS distance;`,
+      `SELECT ST_Distance(ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,ST_SetSRID(ST_MakePoint($3, $4), 4326)::geography) AS distance;`,
+      [
+        originCoordinates[0],
+        originCoordinates[1],
+        destinyCoordinates[0],
+        destinyCoordinates[1],
+      ],
     );
     console.log(distance);
     console.log('origin', originCoordinates[0], originCoordinates[1]);
