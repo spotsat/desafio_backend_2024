@@ -50,20 +50,36 @@ export class GraphController {
 
   @Get(':id/all-paths')
   async listAllPaths(
-    @ParamId() id: number,
+    @ParamId('id') id: number,
     @Query('originId') originId: number,
     @Query('destinyId') destinyId: number,
     @Query('limitStop') limitStop: number,
   ) {
     try {
-      return this.graphService.allPaths(
+      if (!id || isNaN(id) || id < 0) {
+        throw new BadRequestException('Invalid id');
+      }
+
+      if (!originId || isNaN(originId) || originId < 0) {
+        throw new BadRequestException('Invalid originId');
+      }
+
+      if (!destinyId || isNaN(destinyId) || destinyId < 0) {
+        throw new BadRequestException('Invalid destinyId');
+      }
+
+      if (!limitStop || isNaN(limitStop) || limitStop < 0) {
+        throw new BadRequestException('Invalid limitStop');
+      }
+
+      return await this.graphService.allPaths(
         Number(id),
         Number(originId),
         Number(destinyId),
         Number(limitStop),
       );
     } catch (error) {
-      return new BadRequestException(error);
+      throw error;
     }
   }
 
@@ -72,7 +88,7 @@ export class GraphController {
     try {
       return this.graphService.deleteGraph(id);
     } catch (error) {
-      return new BadRequestException(error);
+      throw error;
     }
   }
 }

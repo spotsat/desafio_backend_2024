@@ -309,20 +309,27 @@ export class GraphService {
       destinyId,
     });
 
+    let paths = [];
+
+    if (limitStop) {
+      console.log('all', allPaths);
+      console.log(limitStop);
+      paths = allPaths.filter((path) => path.length <= limitStop + 2);
+    } else {
+      paths = allPaths;
+    }
+
     // Retorna os caminhos com no máximo 'limitStop' paradas
 
-    return allPaths.map((path, index) => {
-      path.length <= limitStop + 2 && {
-        route: index + 1,
-        path: path.map((vertexId) => {
-          const newPoint = points.find((point) => point.id === vertexId);
-          return {
-            id: newPoint.id,
-            name: newPoint.name,
-            location: newPoint.location,
-          };
-        }),
-      };
+    return paths.map((path) => {
+      return path.map((id) => {
+        const newPoint = points.find((point) => point.id === id);
+        return {
+          id: newPoint.id,
+          name: newPoint.name,
+          location: newPoint.location,
+        };
+      });
     });
   }
 
@@ -392,7 +399,7 @@ export class GraphService {
     } catch (error) {
       console.log(error);
       await queryRunner.rollbackTransaction();
-      throw new BadRequestException('Error while deleting graph');
+      throw error;
     }
   }
 
@@ -401,17 +408,11 @@ export class GraphService {
     destinyCoordinates: number[],
   ) {
     const distance = await this.dataSource.query(
-      `SELECT ST_Distance(ST_Transform('SRID=4326;POINT($1, $2)'::geometry, 3857),
-            ST_Transform('SRID=4326;POINT($3, $4)'::geometry, 3857)
-          );`,
-      [
-        originCoordinates[0],
-        originCoordinates[1],
-        destinyCoordinates[0],
-        destinyCoordinates[1],
-      ],
+      `SELECT ST_Distance(ST_SetSRID(ST_MakePoint(-46.6333, -23.5505), 4326)::geography,ST_SetSRID(ST_MakePoint(-46.6079, -23.5513), 4326)::geography) AS distance;`,
     );
     console.log(distance);
+    console.log('origin', originCoordinates[0], originCoordinates[1]);
+    console.log('destiny', destinyCoordinates[0], destinyCoordinates[1]);
     return distance;
   }
 }

@@ -139,7 +139,7 @@ export class AuthService {
   async register(data: AuthRegisterDTO) {
     delete data.role;
 
-    console.log(data);
+    (data);
 
     const user = await this.userService.create(data);
 

@@ -33,7 +33,6 @@ export class Graph {
   addVertex(id: number, coordinates: [number, number]): HelperVertex {
     const vertex = new HelperVertex(id, coordinates);
     this.vertices.set(id, vertex);
-    console.log(`Vértice adicionado: ${id}`, vertex); // Log para confirmar
     return vertex;
   }
 
@@ -58,14 +57,8 @@ export class Graph {
     const path: number[] = [];
     const predecessors: Map<number, number> = new Map();
 
-    console.log('Vértices disponíveis:', this.vertices.keys());
-    console.log('originId', originId, typeof originId);
-    console.log('vertices', this.vertices.get(originId));
-
     queue.push(this.vertices.get(originId));
     visited.add(originId);
-
-    console.log('queue', queue);
 
     while (queue.length > 0) {
       const actualVertex = queue.shift();

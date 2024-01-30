@@ -37,7 +37,6 @@ export class UserController {
 
   @Get()
   async list() {
-    console.log('list');
     return this.userService.list();
   }
 
