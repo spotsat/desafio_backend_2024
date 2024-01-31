@@ -68,10 +68,6 @@ export class GraphController {
         throw new BadRequestException('Invalid destinyId');
       }
 
-      if (!limitStop || isNaN(limitStop) || limitStop < 0) {
-        throw new BadRequestException('Invalid limitStop');
-      }
-
       return await this.graphService.allPaths(
         Number(id),
         Number(originId),

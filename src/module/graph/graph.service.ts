@@ -31,7 +31,7 @@ export class GraphService {
     await queryRunner.startTransaction();
 
     const createGraph = await queryRunner.manager.save(GraphEntity, {
-      name: 'myGraph',
+      name: 'Graph Test',
     });
     const pointsToBeCreated: PointEntity[] = [];
 
@@ -82,6 +82,13 @@ export class GraphService {
           (p) => p.location === destinyVertex.data,
         );
 
+        const distance = await this.getDistanceBetweenPoints(
+          originVertex.data.coordinates,
+          destinyVertex.data.coordinates,
+        );
+
+        console.log('distance', distance);
+
         edgesToBeCreated.push({
           id: undefined,
           name: 'default',
@@ -94,7 +101,7 @@ export class GraphService {
               destinyVertex.data.coordinates,
             ],
           },
-          distance: 0,
+          distance: Number(distance),
           graph: createGraph,
         });
       } else {
@@ -215,31 +222,18 @@ export class GraphService {
         graph.addVertex(point.id, point.location.coordinates);
       });
 
-      edges.map((edge) => {
-        const edgeLenght = edge.line.coordinates.reduce((acc, curr, index) => {
-          if (index === 0) return acc;
-          const [x1, y1] = edge.line.coordinates[index - 1];
-          const [x2, y2] = curr;
-          const x = x2 - x1;
-          const y = y2 - y1;
-          return acc + Math.sqrt(x * x + y * y);
-        }, 0);
-        this.getDistanceBetweenPoints(
-          edge.origin.location.coordinates,
-          edge.destiny.location.coordinates,
-        );
-
-        graph.addEdge(edge.origin.id, edge.destiny.id, edgeLenght);
+      edges.map(async (edge) => {
+        graph.addEdge(edge.origin.id, edge.destiny.id, edge.distance);
       });
 
       // Encontra o melhor caminho
 
-      const bestPath = graph.findBestPath({
+      const shortestPath = graph.findBestPath({
         originId,
         destinyId,
       });
 
-      return bestPath.map((path) => {
+      return shortestPath.map((path) => {
         const newPoint = points.find((point) => point.id === path);
         return {
           id: newPoint.id,
@@ -312,8 +306,6 @@ export class GraphService {
     let paths = [];
 
     if (limitStop) {
-      console.log('all', allPaths);
-      console.log(limitStop);
       paths = allPaths.filter((path) => path.length <= limitStop + 2);
     } else {
       paths = allPaths;
@@ -406,7 +398,7 @@ export class GraphService {
   async getDistanceBetweenPoints(
     originCoordinates: number[],
     destinyCoordinates: number[],
-  ) {
+  ): Promise<number> {
     const distance = await this.dataSource.query(
       `SELECT ST_Distance(ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,ST_SetSRID(ST_MakePoint($3, $4), 4326)::geography) AS distance;`,
       [
@@ -416,9 +408,7 @@ export class GraphService {
         destinyCoordinates[1],
       ],
     );
-    console.log(distance);
-    console.log('origin', originCoordinates[0], originCoordinates[1]);
-    console.log('destiny', destinyCoordinates[0], destinyCoordinates[1]);
-    return distance;
+
+    return distance[0].distance;
   }
 }

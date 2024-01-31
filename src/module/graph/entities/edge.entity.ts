@@ -34,7 +34,7 @@ export class EdgeEntity {
   })
   line: LineString;
 
-  @Column()
+  @Column({ type: 'float' })
   distance: number;
 
   @ManyToOne(() => GraphEntity)
