@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entity/user.entity';
 import { Repository } from 'typeorm';
+import { LoggingService } from '../log/loggin.service';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
     private readonly userService: UserService,
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
+    private logginService: LoggingService,
   ) {}
 
   createToken(user: UserEntity) {

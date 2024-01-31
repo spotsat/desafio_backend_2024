@@ -53,5 +53,9 @@ export const createGraphDtoMock: CreateGraphDto = {
       originId: 4,
       destinyId: 2,
     },
+    {
+      originId: 1,
+      destinyId: 3,
+    },
   ],
 };

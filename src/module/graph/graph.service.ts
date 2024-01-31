@@ -87,8 +87,6 @@ export class GraphService {
           destinyVertex.data.coordinates,
         );
 
-        console.log('distance', distance);
-
         edgesToBeCreated.push({
           id: undefined,
           name: 'default',
@@ -284,16 +282,7 @@ export class GraphService {
     });
 
     edges.map((edge) => {
-      const edgeLenght = edge.line.coordinates.reduce((acc, curr, index) => {
-        if (index === 0) return acc;
-        const [x1, y1] = edge.line.coordinates[index - 1];
-        const [x2, y2] = curr;
-        const x = x2 - x1;
-        const y = y2 - y1;
-        return acc + Math.sqrt(x * x + y * y);
-      }, 0);
-
-      graph.addEdge(edge.origin.id, edge.destiny.id, edgeLenght);
+      graph.addEdge(edge.origin.id, edge.destiny.id, edge.distance);
     });
 
     // Encontra todos os caminhos

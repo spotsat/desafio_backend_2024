@@ -95,6 +95,24 @@ export const edgeRepositoryMock = {
           },
         },
       },
+      {
+        id: 4,
+        name: 'default',
+        origin: {
+          id: 1,
+          location: {
+            type: 'Point',
+            coordinates: [0, 0],
+          },
+        },
+        destiny: {
+          id: 3,
+          location: {
+            type: 'Point',
+            coordinates: [2, 2],
+          },
+        },
+      },
     ]),
   },
 };

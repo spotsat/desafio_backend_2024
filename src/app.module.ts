@@ -10,6 +10,7 @@ import { UserEntity } from './module/user/entity/user.entity';
 import { GraphEntity } from './module/graph/entities/graph.entity';
 import { EdgeEntity } from './module/graph/entities/edge.entity';
 import { PointEntity } from './module/graph/entities/point.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),

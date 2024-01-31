@@ -11,6 +11,7 @@ export const dataSourceMock = {
       release: jest.fn().mockResolvedValue(null),
       manager: {
         save: jest.fn().mockResolvedValue({}),
+        delete: jest.fn().mockResolvedValue(true),
       },
     }),
     query: jest.fn().mockResolvedValue([{ distance: 1 }]),
