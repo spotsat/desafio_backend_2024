@@ -1,4 +1,4 @@
-import { UserService } from 'src/module/user/user.service';
+import { UserService } from '../../module/user/user.service';
 import { userEntityList } from './user-entity-list.mock';
 
 export const userServiceMock = {

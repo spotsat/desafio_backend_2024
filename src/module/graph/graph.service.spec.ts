@@ -8,6 +8,7 @@ import { createGraphDtoMock } from '../../testing/graph/create-graph-dto.mock';
 import { graphEntityList } from '../../testing/graph/create-graph-entity-list';
 import { allPathsMock } from '../../testing/graph/all-paths.mock';
 import { shortestPathMock } from '../../testing/graph/shortest-path.mock';
+import { logServiceMock } from '../../testing/log/log.service.mock';
 
 describe('GraphService', () => {
   let graphService: GraphService;
@@ -20,6 +21,7 @@ describe('GraphService', () => {
         edgeRepositoryMock,
         pointRepositoryMock,
         dataSourceMock,
+        logServiceMock,
       ],
     }).compile();
 

@@ -1,12 +1,19 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { AuthService } from 'src/module/auth/auth.service';
-import { UserService } from 'src/module/user/user.service';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { AuthService } from '../module/auth/auth.service';
+import { UserService } from '../module/user/user.service';
+import { LogService } from '../module/log/log.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly logService: LogService,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -24,7 +31,8 @@ export class AuthGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      return false;
+      this.logService.logMessage('error', `Invalid token: ${error.message}`);
+      throw new UnauthorizedException('Invalid token');
     }
   }
 }

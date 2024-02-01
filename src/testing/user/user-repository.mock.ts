@@ -1,16 +1,14 @@
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { UserEntity } from '../../module/user/entity/user.entity';
 import { userEntityList } from './user-entity-list.mock';
 
 export const userRepositoryMock = {
-  provide: 'UserRepository',
+  provide: getRepositoryToken(UserEntity),
   useValue: {
-    user: {
-      count: jest.fn().mockResolvedValue(true),
-      create: jest.fn().mockResolvedValue(userEntityList[0]),
-      find: jest.fn().mockResolvedValue(userEntityList),
-      findUnique: jest.fn().mockResolvedValue(userEntityList[0]),
-      findFirst: jest.fn().mockResolvedValue(userEntityList[0]),
-      update: jest.fn().mockResolvedValue(userEntityList[0]),
-      delete: jest.fn().mockResolvedValue(true),
-    },
+    find: jest.fn().mockResolvedValue(userEntityList),
+    findOne: jest.fn().mockResolvedValue(userEntityList[0]),
+    save: jest.fn().mockResolvedValue(userEntityList[0]),
+    delete: jest.fn().mockResolvedValue(true),
+    update: jest.fn().mockResolvedValue(userEntityList[0]),
   },
 };

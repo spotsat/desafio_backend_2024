@@ -1,4 +1,4 @@
-import { AuthService } from 'src/module/auth/auth.service';
+import { AuthService } from '../../module/auth/auth.service';
 import { accessToken } from './access-token.mock';
 import { jwtPayload } from './jwt-payload.mock';
 import { resetToken } from './reset-token.mock';

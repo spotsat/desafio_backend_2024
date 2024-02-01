@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({
+  name: 'logs',
+})
 export class LogEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,5 +16,8 @@ export class LogEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;
 
-  // Adicione mais campos conforme necessário
+  //request.ip
+
+  @Column({ name: 'requestIp', nullable: true })
+  ip: string;
 }

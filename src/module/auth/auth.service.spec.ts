@@ -9,6 +9,7 @@ import { accessToken } from '../../testing/auth/access-token.mock';
 import { jwtPayload } from '../../testing/auth/jwt-payload.mock';
 // import { resetToken } from '../../testing/auth/reset-token.mock';
 import { authRegisterDTO } from '../../testing/auth/auth-register-dto.mock';
+import { logServiceMock } from '../../testing/log/log.service.mock';
 
 describe('auth service', () => {
   let authService: AuthService;
@@ -21,6 +22,7 @@ describe('auth service', () => {
         mailerServiceMock,
         userRepositoryMock,
         jwtServiceMock,
+        logServiceMock,
       ],
     }).compile();
 

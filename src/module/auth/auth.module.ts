@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entity/user.entity';
 import * as dotenv from 'dotenv';
+import { LogModule } from '../log/log.module';
 dotenv.config();
 
 @Module({
@@ -15,6 +16,7 @@ dotenv.config();
     }),
     forwardRef(() => UserModule), //User em casos de dependencia circular
     TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => LogModule),
   ],
   controllers: [AuthController],
   providers: [AuthService],

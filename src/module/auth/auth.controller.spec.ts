@@ -8,6 +8,7 @@ import { mailerServiceMock } from '../../testing/auth/mailer-service.mock';
 import { userServiceMock } from '../../testing/user/user-service.mock';
 import { createUserDto } from '../../testing/user/create-user-dto.mock';
 import { accessToken } from '../../testing/auth/access-token.mock';
+import { logServiceMock } from '../../testing/log/log.service.mock';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -20,6 +21,7 @@ describe('AuthController', () => {
         authServiceMock,
         jwtServiceMock,
         mailerServiceMock,
+        logServiceMock,
       ],
     })
       .overrideGuard(AuthGuard)

@@ -11,11 +11,13 @@ import { UserIdCheckMiddleware } from '../../middleware/user-id-check.middleware
 import { AuthModule } from '../auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entity/user.entity';
+import { LogModule } from '../log/log.module';
 
 @Module({
   imports: [
     forwardRef(() => AuthModule),
     TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => LogModule),
   ],
   controllers: [UserController],
   providers: [UserService],

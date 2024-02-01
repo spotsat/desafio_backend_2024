@@ -10,6 +10,10 @@ import { UserEntity } from './module/user/entity/user.entity';
 import { GraphEntity } from './module/graph/entities/graph.entity';
 import { EdgeEntity } from './module/graph/entities/edge.entity';
 import { PointEntity } from './module/graph/entities/point.entity';
+import { LogEntity } from './module/log/log-entity';
+import { LogModule } from './module/log/log.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LogInterceptor } from './interceptors/log.interceptor';
 
 @Module({
   imports: [
@@ -27,12 +31,19 @@ import { PointEntity } from './module/graph/entities/point.entity';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       synchronize: true,
-      entities: [UserEntity, GraphEntity, EdgeEntity, PointEntity],
+      entities: [UserEntity, GraphEntity, EdgeEntity, PointEntity, LogEntity],
     }),
     UserModule,
     GraphModule,
+    LogModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LogInterceptor,
+    },
+  ],
 })
 export class AppModule {}

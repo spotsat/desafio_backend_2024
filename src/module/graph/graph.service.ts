@@ -10,6 +10,7 @@ import { DataSource, Repository } from 'typeorm';
 import { EdgeEntity } from './entities/edge.entity';
 import { GraphEntity } from './entities/graph.entity';
 import { Graph } from './helpers/handle-graph';
+import { LogService } from '../log/log.service';
 
 @Injectable()
 export class GraphService {
@@ -21,6 +22,7 @@ export class GraphService {
     @InjectRepository(GraphEntity)
     private graphRepository: Repository<GraphEntity>,
     private dataSource: DataSource,
+    private logService: LogService,
   ) {}
 
   // ... [importações e declarações]
@@ -126,9 +128,15 @@ export class GraphService {
         }),
       );
       await queryRunner.commitTransaction();
+
+      await this.logService.logInfo(`Graph ${createGraph.id} created`);
+
       return this.readGraph(createGraph.id);
     } catch (error) {
       await queryRunner.rollbackTransaction();
+
+      await this.logService.logError(`Error creating graph: ${error.message}`);
+
       throw error;
     } finally {
       await queryRunner.release();
@@ -374,11 +382,13 @@ export class GraphService {
 
       await queryRunner.commitTransaction();
 
+      await this.logService.logInfo(`The graph ${id} was deleted`);
+
       return {
         message: 'Graph deleted',
       };
     } catch (error) {
-      console.log(error);
+      await this.logService.logError(`Error deleting graph: ${error.message}`);
       await queryRunner.rollbackTransaction();
       throw error;
     }

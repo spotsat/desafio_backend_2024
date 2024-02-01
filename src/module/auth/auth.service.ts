@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entity/user.entity';
 import { Repository } from 'typeorm';
-import { LoggingService } from '../log/loggin.service';
+import { LogService } from '../log/log.service';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
     private readonly userService: UserService,
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
-    private logginService: LoggingService,
+    private readonly logService: LogService,
   ) {}
 
   createToken(user: UserEntity) {
@@ -66,17 +66,25 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await this.usersRepository.findOne({ where: { email } });
+    try {
+      const user = await this.usersRepository.findOne({ where: { email } });
 
-    if (!user) {
-      throw new UnauthorizedException('Email e/ou senha incorretos.');
+      if (!user) {
+        throw new UnauthorizedException('Email e/ou senha incorretos.');
+      }
+
+      if (!(await bcrypt.compare(password, user.password))) {
+        throw new UnauthorizedException('Email e/ou senha incorretos.');
+      }
+
+      this.logService.logInfo(`User ${email} logged in`);
+      return this.createToken(user);
+    } catch (error) {
+      this.logService.logError(
+        `User ${email} failed to login: ${error.message}`,
+      );
+      throw error;
     }
-
-    if (!(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException('Email e/ou senha incorretos.');
-    }
-
-    return this.createToken(user);
   }
 
   // async forget(email: string) {

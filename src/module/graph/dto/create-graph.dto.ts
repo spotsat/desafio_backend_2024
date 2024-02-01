@@ -43,11 +43,11 @@ export class CreateGraphDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => EdgeDTO)
-  edges: EdgeDTO[];
+  @Type(() => VertexDTO)
+  vertices: VertexDTO[];
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => VertexDTO)
-  vertices: VertexDTO[];
+  @Type(() => EdgeDTO)
+  edges: EdgeDTO[];
 }

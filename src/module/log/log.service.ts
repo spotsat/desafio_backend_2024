@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LogEntity } from './loggin-entity';
+import { LogEntity } from './log-entity';
 
 @Injectable()
-export class LoggingService {
+export class LogService {
   constructor(
     @InjectRepository(LogEntity)
     private logRepository: Repository<LogEntity>,
@@ -12,6 +12,21 @@ export class LoggingService {
 
   async logMessage(level: string, message: string): Promise<void> {
     const log = this.logRepository.create({ level, message });
+    await this.logRepository.save(log);
+  }
+
+  async logInfo(message: string): Promise<void> {
+    const log = this.logRepository.create({ level: 'info', message });
+    await this.logRepository.save(log);
+  }
+
+  async logWarn(message: string): Promise<void> {
+    const log = this.logRepository.create({ level: 'warn', message });
+    await this.logRepository.save(log);
+  }
+
+  async logError(message: string): Promise<void> {
+    const log = this.logRepository.create({ level: 'error', message });
     await this.logRepository.save(log);
   }
 

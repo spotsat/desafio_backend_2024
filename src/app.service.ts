@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Hello Worlllld!!';
+    return 'Welcome to the api that manipulates geographic graphs!';
   }
 }
