@@ -23,6 +23,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CreateGraphResponseDto } from './dto/create-graph-response.dto';
 
 @ApiTags('graph')
 @ApiBearerAuth()
@@ -36,6 +37,11 @@ export class GraphController {
     summary: 'Criar um novo grafo',
     description:
       'Para criar um grafo, é necessário informar os vértices, utilizando pontos geográficos no formato GEOJSON, bem como as arestas. Cada aresta deve receber um ID de origem e um ID de destino, referenciando os pontos previamente informados. Troque os valores "0" do esquema por números naturais. (Apenas Adminiistradores podem criar um grafo.)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna o grafo criado',
+    type: CreateGraphResponseDto,
   })
   @Roles(Role.Admin)
   @Post()

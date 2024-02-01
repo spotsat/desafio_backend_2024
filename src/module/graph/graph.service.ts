@@ -11,6 +11,7 @@ import { EdgeEntity } from './entities/edge.entity';
 import { GraphEntity } from './entities/graph.entity';
 import { Graph } from './helpers/handle-graph';
 import { LogService } from '../log/log.service';
+import { CreateGraphResponseDto } from './dto/create-graph-response.dto';
 
 @Injectable()
 export class GraphService {
@@ -27,7 +28,7 @@ export class GraphService {
 
   // ... [importações e declarações]
 
-  async createGraph(data: CreateGraphDto) {
+  async createGraph(data: CreateGraphDto): Promise<CreateGraphResponseDto> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -45,7 +46,6 @@ export class GraphService {
           id: undefined,
           graph: createGraph,
           location: point.data,
-          name: 'default',
         });
       } else {
         throw new ConflictException(
@@ -91,7 +91,6 @@ export class GraphService {
 
         edgesToBeCreated.push({
           id: undefined,
-          name: 'default',
           origin: originPoint,
           destiny: destinyPoint,
           line: {
@@ -120,7 +119,6 @@ export class GraphService {
           return {
             origin: edge.origin,
             destiny: edge.destiny,
-            name: edge.name,
             graph: createGraph,
             line: edge.line,
             distance: edge.distance,
@@ -131,7 +129,9 @@ export class GraphService {
 
       await this.logService.logInfo(`Graph ${createGraph.id} created`);
 
-      return this.readGraph(createGraph.id);
+      const res: CreateGraphResponseDto = await this.readGraph(createGraph.id);
+
+      return res;
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
@@ -143,7 +143,7 @@ export class GraphService {
     }
   }
 
-  async readGraph(id: number) {
+  async readGraph(id: number): Promise<CreateGraphResponseDto> {
     try {
       const graph = await this.graphRepository.findOne({
         where: {
@@ -165,20 +165,18 @@ export class GraphService {
       });
       if (!points) throw new Error('Graph not found');
 
-      return {
+      const res: CreateGraphResponseDto = {
         id: graph.id,
         name: graph.name,
         vertices: points.map((point) => {
           return {
             id: point.id,
-            name: point.name,
             location: point.location,
           };
         }),
         edges: edges.map((edge) => {
           return {
             id: edge.id,
-            name: edge.name,
             origin: {
               id: edge.origin.id,
               location: edge.origin.location,
@@ -190,6 +188,7 @@ export class GraphService {
           };
         }),
       };
+      return res;
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }

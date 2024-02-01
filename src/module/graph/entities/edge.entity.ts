@@ -16,9 +16,6 @@ export class EdgeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
-
   @ManyToOne(() => PointEntity)
   @JoinColumn({ name: 'origin' })
   origin: PointEntity;

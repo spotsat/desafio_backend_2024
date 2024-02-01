@@ -15,9 +15,6 @@ export class PointEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
-
   @Column('geography', {
     srid: 4326,
     nullable: true,

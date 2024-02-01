@@ -5,7 +5,6 @@ export const graphEntityList = [
     vertices: [
       {
         id: 1,
-        name: 'default',
         location: {
           type: 'Point',
           coordinates: [0, 0],
@@ -13,7 +12,6 @@ export const graphEntityList = [
       },
       {
         id: 2,
-        name: 'default',
         location: {
           type: 'Point',
           coordinates: [1, 1],
@@ -21,7 +19,6 @@ export const graphEntityList = [
       },
       {
         id: 3,
-        name: 'default',
         location: {
           type: 'Point',
           coordinates: [2, 2],
@@ -29,7 +26,6 @@ export const graphEntityList = [
       },
       {
         id: 4,
-        name: 'default',
         location: {
           type: 'Point',
           coordinates: [3, 3],
@@ -39,7 +35,6 @@ export const graphEntityList = [
     edges: [
       {
         id: 4,
-        name: 'default',
         origin: {
           id: 4,
           location: {
@@ -57,7 +52,6 @@ export const graphEntityList = [
       },
       {
         id: 5,
-        name: 'default',
         origin: {
           id: 4,
           location: {
@@ -75,7 +69,6 @@ export const graphEntityList = [
       },
       {
         id: 1,
-        name: 'default',
         origin: {
           id: 1,
           location: {
@@ -93,7 +86,6 @@ export const graphEntityList = [
       },
       {
         id: 2,
-        name: 'default',
         origin: {
           id: 2,
           location: {
@@ -111,7 +103,6 @@ export const graphEntityList = [
       },
       {
         id: 3,
-        name: 'default',
         origin: {
           id: 3,
           location: {
@@ -129,7 +120,6 @@ export const graphEntityList = [
       },
       {
         id: 4,
-        name: 'default',
         origin: {
           id: 1,
           location: {
