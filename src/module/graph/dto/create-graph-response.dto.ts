@@ -25,17 +25,95 @@ class ResponseEdgeDTO {
 }
 
 export class CreateGraphResponseDto {
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsNumber()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Grafo triangular' })
   @IsString()
   name: string;
 
-  @ApiProperty({ type: [ResponseVertexDTO] })
+  @ApiProperty({
+    example: [
+      {
+        id: 1,
+        location: {
+          type: 'Point',
+          coordinates: [0, 0],
+        },
+      },
+      {
+        id: 2,
+        location: {
+          type: 'Point',
+          coordinates: [1, 1],
+        },
+      },
+      {
+        id: 3,
+        location: {
+          type: 'Point',
+          coordinates: [2, 2],
+        },
+      },
+    ],
+  })
   vertices: ResponseVertexDTO[];
 
-  @ApiProperty({ type: [ResponseEdgeDTO] })
+  @ApiProperty({
+    example: [
+      {
+        id: 1,
+        origin: {
+          id: 1,
+          location: {
+            type: 'Point',
+            coordinates: [0, 0],
+          },
+        },
+        destiny: {
+          id: 2,
+          location: {
+            type: 'Point',
+            coordinates: [1, 1],
+          },
+        },
+      },
+      {
+        id: 2,
+        origin: {
+          id: 2,
+          location: {
+            type: 'Point',
+            coordinates: [1, 1],
+          },
+        },
+        destiny: {
+          id: 3,
+          location: {
+            type: 'Point',
+            coordinates: [2, 2],
+          },
+        },
+      },
+      {
+        id: 3,
+        origin: {
+          id: 3,
+          location: {
+            type: 'Point',
+            coordinates: [2, 2],
+          },
+        },
+        destiny: {
+          id: 1,
+          location: {
+            type: 'Point',
+            coordinates: [0, 0],
+          },
+        },
+      },
+    ],
+  })
   edges: ResponseEdgeDTO[];
 }

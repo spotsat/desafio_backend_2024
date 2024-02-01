@@ -25,6 +25,7 @@ import * as bcrypt from 'bcrypt';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('users')
+@ApiBearerAuth('JWT-auth')
 @Roles(Role.Admin)
 @UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
@@ -32,13 +33,13 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Criar um novo usuário',
     description:
       'Para criar um usuário, é necessário informar o nome, email e senha.)',
     security: [{ bearerAuth: ['token'] }],
   })
+  @ApiBearerAuth('JWT-auth')
   @Post()
   async create(@Body() data: CreateUserDTO) {
     return this.userService.create(data);
@@ -48,7 +49,6 @@ export class UserController {
     summary: 'Listar usuários',
     description: 'Lista todos os usuários cadastrados no sistema.',
   })
-  @ApiBearerAuth()
   @Get()
   async list() {
     return this.userService.list();

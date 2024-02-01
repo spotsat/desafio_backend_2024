@@ -50,6 +50,6 @@ describe('Users', () => {
   test('should be delete user', async () => {
     const result = await userService.delete(1);
 
-    expect(result).toEqual(true);
+    expect(result).toEqual('Usuário deletado com sucesso!');
   });
 });

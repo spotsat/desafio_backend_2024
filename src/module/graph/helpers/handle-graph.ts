@@ -124,21 +124,3 @@ export class Graph {
   }
 }
 
-// const graph = new Graph();
-// graph.addVertex(1, [0, 0]);
-// graph.addVertex(2, [1, 1]);
-// graph.addVertex(3, [2, 2]);
-// graph.addVertex(4, [3, 3]);
-// graph.addVertex(5, [4, 4]);
-
-// graph.addEdge(1, 2, 1);
-// graph.addEdge(2, 3, 1);
-// graph.addEdge(2, 5, 1);
-// graph.addEdge(3, 4, 1);
-// graph.addEdge(4, 3, 1);
-// graph.addEdge(5, 3, 1);
-// graph.addEdge(5, 1, 1);
-
-// const path = graph.findBestPath({ originId: 1, destinyId: 5 });
-
-// console.log(path);

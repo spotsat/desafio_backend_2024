@@ -10,12 +10,17 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('Exemplo API')
-    .setDescription('Descrição da API')
+    .setTitle('API de grafos geográficos')
+    .setDescription(
+      'API para manipulação e análise de grafos de coordenadas geográficas. ' +
+        'Permite operações como encontrar o melhor caminho entre dois pontos, ' +
+        'listar todos os caminhos possíveis, e mais funcionalidades relacionadas ' +
+        'à análise de grafos geográficos.',
+    )
     .setVersion('1.0')
     .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'JWT',
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
+      'JWT-auth',
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);

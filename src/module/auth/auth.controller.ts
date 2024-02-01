@@ -14,7 +14,9 @@ import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '../../guards/auth.guard';
 import { User } from '../../decorators/user.decorator';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -22,6 +24,10 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
+  @ApiOperation({
+    summary: 'Autenticar usuário',
+    description: 'Autenticar usuário com email e senha.',
+  })
   @Post('login')
   async login(@Body() { email, password }: AuthLoginDTO) {
     return this.authService.login(email, password);
@@ -42,6 +48,11 @@ export class AuthController {
   //     return this.authService.reset(password, token);
   //   }
 
+  @ApiOperation({
+    summary: 'Detalhar usuário autenticado',
+    description: 'Detalhar usuário autenticado.',
+  })
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthGuard)
   @Post('me')
   async me(@User() user, @Req() { tokenPayload }) {

@@ -34,7 +34,7 @@ export class GraphService {
     await queryRunner.startTransaction();
 
     const createGraph = await queryRunner.manager.save(GraphEntity, {
-      name: 'Graph Test',
+      name: data.name,
     });
     const pointsToBeCreated: PointEntity[] = [];
 
@@ -49,7 +49,7 @@ export class GraphService {
         });
       } else {
         throw new ConflictException(
-          `Vertex ${point.vertexId} already exists in this graph`,
+          `Vertice ${point.vertexId} ja existe no array de vertices`,
         );
       }
     }
@@ -72,7 +72,7 @@ export class GraphService {
 
         if (!originVertex || !originVertex) {
           throw new BadRequestException(
-            'Vertex not found in the vertices array',
+            'Vertice de origem ou destino não encontrado',
           );
         }
 
@@ -105,7 +105,7 @@ export class GraphService {
         });
       } else {
         throw new BadRequestException(
-          `Already exists an edge between
+          `Aresta ja existe entre os vertices
              ${edge.originId} e ${edge.destinyId}`,
         );
       }
@@ -127,7 +127,7 @@ export class GraphService {
       );
       await queryRunner.commitTransaction();
 
-      await this.logService.logInfo(`Graph ${createGraph.id} created`);
+      await this.logService.logInfo(`Grafo ${createGraph.id} criado`);
 
       const res: CreateGraphResponseDto = await this.readGraph(createGraph.id);
 
@@ -135,7 +135,7 @@ export class GraphService {
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      await this.logService.logError(`Error creating graph: ${error.message}`);
+      await this.logService.logError(`Erro ao criar grafo: ${error.message}`);
 
       throw error;
     } finally {
@@ -150,20 +150,20 @@ export class GraphService {
           id,
         },
       });
-      if (!graph) throw new Error('Graph not found');
+      if (!graph) throw new Error('Grafo não encontrado');
       const edges = await this.edgeRepository.find({
         where: {
           graph: { id },
         },
         relations: ['origin', 'destiny'],
       });
-      if (!edges) throw new Error('Graph not found');
+      if (!edges) throw new Error('Grafo não encontrado');
       const points = await this.pointRepository.find({
         where: {
           graph: { id },
         },
       });
-      if (!points) throw new Error('Graph not found');
+      if (!points) throw new Error('Grafo não encontrado');
 
       const res: CreateGraphResponseDto = {
         id: graph.id,
@@ -346,10 +346,12 @@ export class GraphService {
       },
     });
 
-    if (!graphExists) throw new BadRequestException('Graph not found');
+    if (!graphExists) throw new BadRequestException('Grafo não encontrado');
 
     if (!originExists || !destinyExists)
-      throw new BadRequestException('Invalid origin or destiny');
+      throw new BadRequestException(
+        'Ponto de origem ou destino não encontrado',
+      );
 
     return true;
   }
@@ -365,7 +367,7 @@ export class GraphService {
         },
       });
 
-      if (!graph) throw new BadRequestException('Graph not found');
+      if (!graph) throw new BadRequestException('Grafo não encontrado');
 
       await queryRunner.manager.delete(EdgeEntity, {
         graph: { id },
@@ -381,13 +383,13 @@ export class GraphService {
 
       await queryRunner.commitTransaction();
 
-      await this.logService.logInfo(`The graph ${id} was deleted`);
+      await this.logService.logInfo(`O grafo ${id} foi deletado`);
 
       return {
         message: 'Graph deleted',
       };
     } catch (error) {
-      await this.logService.logError(`Error deleting graph: ${error.message}`);
+      await this.logService.logError(`Erro ao deletar grafo: ${error.message}`);
       await queryRunner.rollbackTransaction();
       throw error;
     }

@@ -63,8 +63,6 @@ describe('GraphController', () => {
 
     const test2 = await graphController.listAllPaths(1, 1, 4, 1);
     expect(test2).toBeDefined();
-    console.log(test2);
-    console.log(allPathsMock[1]);
     expect(test2).toStrictEqual([allPathsMock[1]]);
   });
 });

@@ -79,7 +79,7 @@ describe('UserController', () => {
     test('should delete a user', async () => {
       const result = await userController.delete(1);
 
-      expect(result).toEqual(true);
+      expect(result).toEqual('Usuário deletado com sucesso!');
     });
   });
 

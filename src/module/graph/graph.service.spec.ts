@@ -41,7 +41,6 @@ describe('GraphService', () => {
   it('should read a graph', async () => {
     const graph = await graphService.readGraph(1);
     expect(graph).toBeDefined();
-    console.log(graph);
     expect(graph).toStrictEqual(graphEntityList[0]);
   });
 

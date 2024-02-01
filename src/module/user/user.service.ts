@@ -19,6 +19,12 @@ export class UserService {
 
     data.password = await bcrypt.hash(data.password, salt);
 
+    const hasUser = await this.list();
+
+    if (hasUser.length === 0) {
+      data.role = 2; //Admin
+    }
+
     return this.usersRepository.save(data);
   }
 
@@ -62,9 +68,9 @@ export class UserService {
   async delete(id: number) {
     try {
       await this.usersRepository.delete({ id });
-      return true;
+      return `Usuário deletado com sucesso!`;
     } catch (error) {
-      return false;
+      throw new NotFoundException(`Não foi possível deletar o usuário ${id}!`);
     }
   }
 

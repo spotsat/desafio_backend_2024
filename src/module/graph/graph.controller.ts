@@ -20,13 +20,15 @@ import { LogInterceptor } from '../../interceptors/log.interceptor';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateGraphResponseDto } from './dto/create-graph-response.dto';
 
 @ApiTags('graph')
-@ApiBearerAuth()
+@ApiBearerAuth('JWT-auth')
 @UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
 @Controller('graph')
@@ -58,12 +60,13 @@ export class GraphController {
     description:
       'Lista um grafo específico, informando o ID do grafo. (Adminiistradores e usuários podem listar um grafo.)',
   })
+  @ApiParam({ name: 'id', type: Number, description: 'ID do grafo' })
   @Roles(Role.Admin, Role.User)
   @Get(':id')
   async read(@ParamId() id: number) {
     try {
       if (!id || isNaN(id) || id < 0)
-        throw new BadRequestException('Invalid id');
+        throw new BadRequestException('Id inválido');
       return this.graphService.readGraph(id);
     } catch (error) {
       return new BadRequestException(error);
@@ -73,7 +76,7 @@ export class GraphController {
   @ApiOperation({
     summary: 'Buscar menor caminho',
     description:
-      'Busca o menor caminho entre dois pontos informados. (Administradores e Usuários podem buscar o menor caminho.)',
+      'Busca o menor caminho entre dois pontos informados, para obter os Ids dos pontos desse grafo, consulte a rota GET /graph/:id (Administradores e Usuários podem buscar o menor caminho.)',
   })
   @ApiResponse({
     status: 200,
@@ -82,6 +85,24 @@ export class GraphController {
   @ApiResponse({
     status: 400,
     description: 'Bad request',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'ID do grafo',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'originId',
+    type: Number,
+    description: 'ID do ponto de origem',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'destinyId',
+    type: Number,
+    description: 'ID do ponto de destino',
+    example: 3,
   })
   @Roles(Role.Admin, Role.User)
   @Get(':id/shortest-path')
@@ -102,13 +123,38 @@ export class GraphController {
     description:
       'Lista todos os caminhos entre dois pontos informados. (Administradores e Usuários podem listar todos os caminhos.)',
   })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'ID do grafo',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'originId',
+    type: Number,
+    description: 'ID do ponto de origem',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'destinyId',
+    type: Number,
+    description: 'ID do ponto de destino',
+    example: 3,
+  })
+  @ApiQuery({
+    name: 'limitStop',
+    type: Number,
+    description: 'Limite de paradas',
+    example: 1,
+    required: false,
+  })
   @Roles(Role.Admin, Role.User)
   @Get(':id/all-paths')
   async listAllPaths(
     @ParamId('id') id: number,
     @Query('originId') originId: number,
     @Query('destinyId') destinyId: number,
-    @Query('limitStop') limitStop: number,
+    @Query('limitStop') limitStop?: number,
   ) {
     try {
       if (!id || isNaN(id) || id < 0) {
