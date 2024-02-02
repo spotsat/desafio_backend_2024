@@ -38,22 +38,23 @@ Para visualizar os logs utilize o seguinte comando fora do container. (CTRL+C pa
 docker logs app-1 -f
 ```
 
+
+## Comandos de inicialização
 ```bash
 # development
-$ npm run start
-
-# watch mode
 $ npm run dev
 
 # production mode
-$ npm run start:prod
+$ npm run prod
 ```
 
-## Test
+## Testes
 
 ```bash
 # unit tests
 $ npm run test
+# unit tests watch
+$ npm run test:watch
 
 
 
