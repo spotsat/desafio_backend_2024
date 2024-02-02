@@ -123,6 +123,7 @@ async def view_all_routes_by_graph_id(
         '}"', '}')
     all_routes = json.loads(clean_str)
 
+    logging.info("Consulta conclúida")
     return all_routes
 
 @graphs_router.get(
@@ -181,6 +182,8 @@ async def view_shortest_route_by_graph_id(
     # Dentre todas as rotas do grafo,
     #encontra a de menor distancia e a retorna
     distances = calcula_distancias(assigning_coordinates)
+
+    logging.info("Consulta e calculos conclúidos")
     return \
         " De todas as rotas do grafo, a menor possui " + \
         f"{min(distances)} de distancia"
