@@ -1,9 +1,9 @@
 <h1 align="center">API de dados geográficos</h1>
 
 <p align="center">
-<img src="https://static-00.iconduck.com/assets.00/nestjs-icon-2048x2040-3rrvcej8.png" alt="nestjs">
-<img src="https://static-00.iconduck.com/assets.00/typescript-icon-icon-1024x1024-vh3pfez8.png" alt="typescript">
-<img src="https://cdn-icons-png.flaticon.com/512/5968/5968342.png" alt="postgres">
+<img src="https://static-00.iconduck.com/assets.00/nestjs-icon-2048x2040-3rrvcej8.png" width="20px" alt="nestjs">
+<img src="https://static-00.iconduck.com/assets.00/typescript-icon-icon-1024x1024-vh3pfez8.png" width="20px" alt="typescript">
+<img src="https://cdn-icons-png.flaticon.com/512/5968/5968342.png" width="20px" alt="postgres">
 </p>
 
 ## Inicialização do projeto
