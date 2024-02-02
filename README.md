@@ -24,13 +24,22 @@ No arquivo .env adicione as variáveis de ambiente necessárias. Se é para ambi
 ## Inicializando com Docker Compose
 
 Utilize o docker-compose para inicializar os serviços necessários para o projeto.
+````bash
+docker-compose up -d --build
 ````
-docker-compose up --build
+ou
+````bash
+docker-compose up -d
 ````
 
-Para acessar o container utilize o seguinte comando.
-```powershell
-docker exec -it app-1 /bin/bash
+Para criar migrações é necessário entrar no container da aplicação e executar o comando de migração.
+```bash
+docker exec -it desafio_backend_2024-app-1 /usr/src/app
+```
+
+Execute as migrations dentro do container para criar as tabelas no banco de dados.
+```bash
+npm run migration:run
 ```
 
 Para visualizar os logs utilize o seguinte comando fora do container. (CTRL+C para sair)
