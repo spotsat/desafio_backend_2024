@@ -1,73 +1,70 @@
+<h1 align="center">API de dados geográficos</h1>
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+<img src="https://static-00.iconduck.com/assets.00/nestjs-icon-2048x2040-3rrvcej8.png" width="20px" alt="nestjs">
+<img src="https://static-00.iconduck.com/assets.00/typescript-icon-icon-1024x1024-vh3pfez8.png" width="20px" alt="typescript">
+<img src="https://cdn-icons-png.flaticon.com/512/5968/5968342.png" width="20px" alt="postgres">
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+## Inicialização do projeto
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+## Variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto.
 
 ```bash
-# development
-$ npm run start
+cp .env.example .env
+```
+No arquivo .env adicione as variáveis de ambiente necessárias. Se é para ambiente de produção ou deseolvimento. Para usar em produção, troque os valores de `NODE_ENV` e `DATABASE_HOST` para `production` e `host_do_banco` respectivamente.
 
-# watch mode
-$ npm run start:dev
+## Inicializando com Docker Compose
 
-# production mode
-$ npm run start:prod
+Utilize o docker-compose para inicializar os serviços necessários para o projeto.
+````bash
+docker-compose up -d --build
+````
+ou
+````bash
+docker-compose up -d
+````
+
+Para criar migrações é necessário entrar no container da aplicação e executar o comando de migração.
+```bash
+docker exec -it desafio_backend_2024-app-1 /usr/src/app
 ```
 
-## Test
+Execute as migrations dentro do container para criar as tabelas no banco de dados.
+```bash
+npm run migration:run
+```
+
+Para visualizar os logs utilize o seguinte comando fora do container. (CTRL+C para sair)
+```powershell
+docker logs app-1 -f
+```
+
+
+## Comandos de inicialização
+```bash
+# development
+$ npm run dev
+
+# production mode
+$ npm run prod
+```
+
+## Testes
 
 ```bash
 # unit tests
 $ npm run test
+# unit tests watch
+$ npm run test:watch
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
-```
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

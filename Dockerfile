@@ -19,8 +19,9 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/dist ./dist
 COPY package*.json ./
 
+# Instalar apenas dependências de produção
 RUN npm install --only=production
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main.js"]
