@@ -123,4 +123,3 @@ export class Graph {
     return edges;
   }
 }
-
