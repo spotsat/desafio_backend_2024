@@ -2,12 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { userRepositoryMock } from '../../testing/user/user-repository.mock';
 import { jwtServiceMock } from '../../testing/auth/jwt-service.mock';
-import { mailerServiceMock } from '../../testing/auth/mailer-service.mock';
 import { userServiceMock } from '../../testing/user/user-service.mock';
 import { userEntityList } from '../../testing/user/user-entity-list.mock';
 import { accessToken } from '../../testing/auth/access-token.mock';
 import { jwtPayload } from '../../testing/auth/jwt-payload.mock';
-// import { resetToken } from '../../testing/auth/reset-token.mock';
 import { authRegisterDTO } from '../../testing/auth/auth-register-dto.mock';
 import { logServiceMock } from '../../testing/log/log.service.mock';
 
@@ -19,7 +17,6 @@ describe('auth service', () => {
       providers: [
         AuthService,
         userServiceMock,
-        mailerServiceMock,
         userRepositoryMock,
         jwtServiceMock,
         logServiceMock,

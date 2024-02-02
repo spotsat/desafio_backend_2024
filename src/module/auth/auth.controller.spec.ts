@@ -4,7 +4,6 @@ import { authServiceMock } from '../../testing/auth/auth-service.mock';
 import { AuthGuard } from '../../guards/auth.guard';
 import { RoleGuard } from '../../guards/role.guard';
 import { jwtServiceMock } from '../../testing/auth/jwt-service.mock';
-import { mailerServiceMock } from '../../testing/auth/mailer-service.mock';
 import { userServiceMock } from '../../testing/user/user-service.mock';
 import { createUserDto } from '../../testing/user/create-user-dto.mock';
 import { accessToken } from '../../testing/auth/access-token.mock';
@@ -20,7 +19,6 @@ describe('AuthController', () => {
         userServiceMock,
         authServiceMock,
         jwtServiceMock,
-        mailerServiceMock,
         logServiceMock,
       ],
     })
@@ -56,21 +54,4 @@ describe('AuthController', () => {
 
     expect(result).toEqual(accessToken);
   });
-
-  //   test('forget', async () => {
-  //     const result = await authController.forget({
-  //       email: createUserDto.email,
-  //     });
-
-  //     expect(result).toEqual(true);
-  //   });
-
-  //   test('reset', async () => {
-  //     const result = await authController.reset({
-  //       password: createUserDto.password,
-  //       token: accessToken,
-  //     });
-
-  //     expect(result).toEqual(resetToken);
-  //   });
 });

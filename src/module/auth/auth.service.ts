@@ -87,65 +87,6 @@ export class AuthService {
     }
   }
 
-  // async forget(email: string) {
-  //   const user = await this.prisma.user.findFirst({
-  //     where: { email },
-  //   });
-
-  //   if (!user) {
-  //     throw new UnauthorizedException('Email incorreto.');
-  //   }
-
-  //   const token = this.jwtService.sign(
-  //     { id: user.id },
-  //     {
-  //       expiresIn: '30 minutes',
-  //       subject: String(user.id),
-  //       issuer: 'forget',
-  //       audience: this.audience,
-  //     },
-  //   );
-
-  //   await this.mailerService.sendMail({
-  //     subject: 'Recuperação de senha',
-  //     to: 'daniel.dr206@gmail.com',
-  //     template: 'forget',
-  //     context: {
-  //       name: user.name,
-  //       token,
-  //     },
-  //   });
-
-  //   return true;
-  // }
-
-  // async reset(password: string, token: string) {
-  //   try {
-  //     const { id } = this.jwtService.verify(token, {
-  //       issuer: 'forget',
-  //       audience: 'users',
-  //     });
-
-  //     if (isNaN(Number(id))) {
-  //       throw new BadRequestException('Token é inválido');
-  //     }
-
-  //     const salt = await bcrypt.genSalt();
-  //     password = await bcrypt.hash(password, salt);
-
-  //     const user = await this.prisma.user.update({
-  //       where: {
-  //         id,
-  //       },
-  //       data: { password },
-  //     });
-
-  //     return this.createToken(user);
-  //   } catch (e) {
-  //     throw new BadRequestException(e);
-  //   }
-  // }
-
   async register(data: AuthRegisterDTO) {
     const user = await this.userService.create(data);
 
