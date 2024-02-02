@@ -1,0 +1,17 @@
+﻿version: "3.8"
+services:
+  postgresql:
+    image: postgres:alpine
+    container_name: geografos-postgres
+    environment:
+      - POSTGRES_DB=geografos
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=senha
+    ports:
+      - 5432:5432
+    volumes:
+      - geografos_psql:/var/lib/postgresql/data
+
+volumes:
+  geografos_psql:
+
