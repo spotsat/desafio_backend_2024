@@ -1,5 +1,5 @@
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { EdgeEntity } from '../../module/graph/entities/edge.entity';
+import { EdgeEntity } from '../../entities/edge.entity';
 
 export const edgeRepositoryMock = {
   provide: getRepositoryToken(EdgeEntity),

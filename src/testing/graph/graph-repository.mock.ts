@@ -1,5 +1,5 @@
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { GraphEntity } from '../../module/graph/entities/graph.entity';
+import { GraphEntity } from '../../entities/graph.entity';
 
 export const graphRepositoryMock = {
   provide: getRepositoryToken(GraphEntity),

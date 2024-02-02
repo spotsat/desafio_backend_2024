@@ -10,7 +10,7 @@ import { UserService } from './user.service';
 import { UserIdCheckMiddleware } from '../../middleware/user-id-check.middleware';
 import { AuthModule } from '../auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './entity/user.entity';
+import { UserEntity } from '../../entities/user.entity';
 import { LogModule } from '../log/log.module';
 
 @Module({

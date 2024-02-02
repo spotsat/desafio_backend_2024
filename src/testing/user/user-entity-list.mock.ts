@@ -1,7 +1,7 @@
 // user.mock.ts
 
 import { Role } from '../../enums/role.enum';
-import { UserEntity } from '../../module/user/entity/user.entity';
+import { UserEntity } from '../../entities/user.entity';
 
 export const userEntityList: UserEntity[] = [
   {

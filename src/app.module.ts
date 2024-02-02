@@ -6,14 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './module/user/user.module';
 import { GraphModule } from './module/graph/graph.module';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { UserEntity } from './module/user/entity/user.entity';
-import { GraphEntity } from './module/graph/entities/graph.entity';
-import { EdgeEntity } from './module/graph/entities/edge.entity';
-import { PointEntity } from './module/graph/entities/point.entity';
-import { LogEntity } from './module/log/log-entity';
 import { LogModule } from './module/log/log.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LogInterceptor } from './interceptors/log.interceptor';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
@@ -25,13 +22,13 @@ import { LogInterceptor } from './interceptors/log.interceptor';
     forwardRef(() => UserModule),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DATABASE_URL,
-      port: 5432,
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.POSTGRES_PORT, 10),
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      synchronize: false,
-      entities: [UserEntity, GraphEntity, EdgeEntity, PointEntity, LogEntity],
+      autoLoadEntities: true,
+      synchronize: true,
     }),
     UserModule,
     GraphModule,

@@ -1,5 +1,5 @@
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { PointEntity } from '../../module/graph/entities/point.entity';
+import { PointEntity } from '../../entities/point.entity';
 export const pointRepositoryMock = {
   provide: getRepositoryToken(PointEntity),
   useValue: {

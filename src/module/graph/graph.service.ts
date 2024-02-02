@@ -4,11 +4,11 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { CreateGraphDto } from './dto/create-graph.dto';
-import { PointEntity } from './entities/point.entity';
+import { PointEntity } from '../../entities/point.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { EdgeEntity } from './entities/edge.entity';
-import { GraphEntity } from './entities/graph.entity';
+import { EdgeEntity } from '../../entities/edge.entity';
+import { GraphEntity } from '../../entities/graph.entity';
 import { Graph } from './helpers/handle-graph';
 import { LogService } from '../log/log.service';
 import { CreateGraphResponseDto } from './dto/create-graph-response.dto';

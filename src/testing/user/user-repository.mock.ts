@@ -1,5 +1,5 @@
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserEntity } from '../../module/user/entity/user.entity';
+import { UserEntity } from '../../entities/user.entity';
 import { userEntityList } from './user-entity-list.mock';
 
 export const userRepositoryMock = {
