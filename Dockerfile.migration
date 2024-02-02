@@ -1,0 +1,15 @@
+FROM node:alpine
+
+WORKDIR /usr/src/app
+
+# Copiar arquivos de configuração e código necessário
+COPY tsconfig.json ./
+COPY db/typeorm.config.ts ./db/
+COPY package*.json ./
+COPY . .
+
+# Instalar todas as dependências (incluindo as de desenvolvimento)
+RUN npm install
+
+# Comando para executar as migrações
+CMD ["npm", "run", "migration:run"]
