@@ -3,7 +3,7 @@ from fastapi import (
     status, HTTPException, APIRouter
 )
 from typing import List
-from app.database.database import database, users, user_types
+from app.database.database import database, users
 from app.schemas.user import User, UserResponse
 import logging
 

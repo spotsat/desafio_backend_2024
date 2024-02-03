@@ -185,7 +185,7 @@ async def view_shortest_route_by_graph_id(
 
     logging.info("Consulta e calculos conclúidos")
     return \
-        " De todas as rotas do grafo, a menor possui " + \
+        "De todas as rotas do grafo, a menor possui " + \
         f"{min(distances)} de distancia"
 
 

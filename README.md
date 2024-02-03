@@ -11,9 +11,9 @@ http://127.0.0.1:8000/docs#/
 ---
 ## Rodar os testes
 
-```
-poetry run pytest tests -v -x
-```
+~~~
+poetry run pytest -v -x
+~~~
 ---
 # Informações e documentação
 ## Passo a passo para primeira utilização de desenvolvimento
