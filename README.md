@@ -1,6 +1,3 @@
-# desafio_spotsat
-A partir de um banco de dados contendo referências geograficas, captura cordenadas e retorna os dados.
-
 ## Acessar os docs
 
 Dps de iniciar o servidor visite o endereço:
