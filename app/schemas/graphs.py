@@ -1,32 +1,30 @@
-import re
-from pydantic import BaseModel, Field
-from typing import Dict, Optional, Tuple
+from pydantic import BaseModel, constr, conlist
+from typing import List
+
+
+class Coordinate(BaseModel):
+    latitude: float = 0.0
+    longitude: float = 0.0
+
+
+class Node(BaseModel):
+    name: constr(strip_whitespace=True, to_lower=True, min_length=1) = "A" # type: ignore
+    coordinate: Coordinate
+
 
 class Graph(BaseModel):
     """ Modelo de grafo """
-    coordinates: Optional[
-        Dict[str, list]
-    ] = Field(
-        None,
-        example={"A": [1, 2], "B": [3, 4], "C": [5, 6]}
-    )
-    routes: Optional[
-        Dict[str,Tuple[str, str]]
-    ] = Field(
-        None,
-        example={
-            "rota_1": ("A", "B"),
-            "rota_2": ("A", "C")
-        }
-    )
+    nodes: List[Node] = [
+        {"name": "A", "coordinate": {"latitude": 0.0, "longitude": 0.0}},
+        {"name": "B", "coordinate": {"latitude": 1.0, "longitude": 1.0}},
+        ]
+    edges: List[conlist(
+        item_type=constr(strip_whitespace=True, to_lower=True, min_length=1),
+        max_length=2,
+        min_length=2,
+        )] = [["A", "B"]] # type: ignore
+
 
 class GraphResponse(Graph):
     """ Modelo de resposta do grafo """
     id: int
-
-class ShortestDistanceResponse(Graph):
-    """
-    Modelo de resposta da menor distancia de rotas
-    entre um nó e outro do grafo
-    """
-    shortest_distance: str

@@ -1,6 +1,6 @@
 import sqlalchemy as sa
-from sqlalchemy.dialects.postgresql import JSON
 import databases
+from sqlalchemy.sql.expression import text
 
 DATABASE_URL = "postgresql://postgres:senha@localhost:5432/geografos"
 
@@ -17,24 +17,23 @@ graphs = sa.Table(
         primary_key=True
     ),
     sa.Column(
-        "coordinates",
+        "nodes",
         sa.JSON
     ),
     sa.Column(
-        "routes",
+        "edges",
         sa.JSON
     ),
-    # sa.Column(
-    #     "created_at",
-    #     sa.TIMESTAMP(timezone=True),
-    #     server_default=sa.func.now(),
-    # ),
-    # sa.Column(
-    #     "updated_at",
-    #     sa.TIMESTAMP(timezone=True),
-    #     server_default=sa.func.now(),
-    #     onupdate=sa.func.now(),
-    # ),
+    sa.Column(
+        "created_at",
+        sa.DateTime,
+        server_default=text("now()")
+    ),
+    sa.Column(
+        "updated_at",
+        sa.DateTime,
+        server_default=text("now()")
+    ),
 )
 
 roles = sa.Table(

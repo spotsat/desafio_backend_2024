@@ -1,20 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from typing import Annotated
 # from app.schemas.core import Tags
-from app.database.database import database
-from app.routes.graphs import graphs_router
-from app.routes.users import users_router
+from app.database.database import database, users
+from app.routes import api
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 app = FastAPI(
-    summary="API de exemplo",
-    title="API de exemplo2",
-    description="Descrição da API de exemplo",
+    # summary="Geografos",
+    title="Geografos",
+    # description="Calcula grafos"
 )
 
-app.include_router(graphs_router, prefix="/api/v1", tags=["graphs"])
+app.include_router(api.router)
 
-@app.get("/")
-async def read_main():
-    return {"msg": "Hello World"}
+
 
 @app.on_event("startup")
 async def startup_event():
