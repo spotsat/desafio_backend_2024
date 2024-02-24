@@ -37,41 +37,8 @@ async def create_graph(
     )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @router.get(
-    "/view_graph/{graph_id}",
+    "/{graph_id}",
     summary="Mostra um único grafo pelo id",
     response_description="Detalhes do grafo",
 )
@@ -82,12 +49,12 @@ async def view_graph_by_id(
     Mostra detalhamento de um grafo pelo id.
     """
     # Verifica existencia do grafo pelo id passado
-    graph_exists = await database.fetch_one(
+    graph = await database.fetch_one(
         graphs.select().where(graphs.c.id == graph_id)
     )
 
     # Retorna exceção 404 caso o id não tenha sido encontrado
-    if not graph_exists:
+    if not graph:
         logging.error("Grafo não encontrado")
         raise HTTPException(
             status_code=404,
@@ -95,20 +62,16 @@ async def view_graph_by_id(
         )
 
     logging.info("Consulta concluída")
-    # Captura dados do grafo no banco de dados e retorna
-
+    return graph
 
 
 @router.get(
     "/",
     summary="Mostra grafos registrados",
     response_description="Lista de grafos registrados",
-    response_model=List[GraphResponse],
+    # response_model=List[GraphResponse],
 )
 async def view_graphs(
-    query: list = Query(
-        default_factory=list
-    ),
     limit: int = Query(default=10, ge=1, le=50),
     recent: bool = False
 ):
@@ -117,46 +80,23 @@ async def view_graphs(
     """
     # Cria comando para buscar grafos no banco de dados
     # pelos filtros de limite e ordem de criação
-    if not recent:
-        query = graphs.select().limit(limit)
+
+    query = graphs.select().limit(limit)
+
     if recent:
         query = graphs.select().order_by(
             graphs.c.created_at.desc()).limit(limit)
 
-    # if not query:
-    #     logging("Consulta não pode ser concluída")
-    #     raise HTTPException(
-    #         status_code=status.HTTP_400_BAD_REQUEST,
-    #         detail="Consulta não pode ser concluída",
-    #     )
-
     logging.info("Consulta concluída")
     return await database.fetch_all(query)
 
-@router.put("/{graph_id}")
+@router.put("/{graph_id}", status_code=status.HTTP_202_ACCEPTED)
 async def update_graph(
         graph_id: int = Path(..., title="Id do grafo"),
         graph: Graph = Body(
         ...,
         **Graph.model_config,
-        openapi_examples={
-            "normal": {
-                "summary":
-                    "Altera um grafo e o salva na tabela" + \
-                    "graphs do banco de dados",
-                "description": "Um exemplo normal",
-                "value": {
-                    "coordinates": {
-                        "A": [1, 2],
-                        "B": [3, 4],
-                        "C": [5, 6]
-                    },
-                    "routes": {
-                        "rota_1": ("A", "B"),
-                        "rota_2": ("A", "C")
-                    }
-                }
-            }}
+
 )) -> GraphResponse:
     """
     Altera um grafo.
@@ -165,9 +105,9 @@ async def update_graph(
     """
     # Verifica existencia do grafo pelo id passado
     query = graphs.select().where(graphs.c.id == graph_id)
-    graph_exists = await database.fetch_one(query)
+
     # Levanta exceção 404 caso não exista
-    if not graph_exists:
+    if not await database.fetch_one(query):
         logging.error("Grafo não existe")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -197,10 +137,9 @@ async def delete_graph(
     Returns:
         Status code 204, confirmando a exclusão.
     """
-    query = graphs.select().where(graphs.c.id == graph_id)
-    graph_exists = await database.fetch_one(query)
+
     # Levanta exceção 404 caso não exista
-    if not graph_exists:
+    if not await database.fetch_one(graphs.select().where(graphs.c.id == graph_id)):
         logging.error("Grafo não existe")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
