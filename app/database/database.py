@@ -32,7 +32,8 @@ graphs = sa.Table(
     sa.Column(
         "updated_at",
         sa.DateTime,
-        server_default=text("now()")
+        server_default=text("now()"),
+        onupdate=text("now()")
     ),
 )
 
