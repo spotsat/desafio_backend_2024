@@ -37,53 +37,47 @@ graphs = sa.Table(
     ),
 )
 
-roles = sa.Table(
-    "roles",
-    metadata,
-    sa.Column(
-        "id", sa.Integer, primary_key=True),
-    sa.Column(
-        "name", sa.String(25), unique=True),
-)
-
 users = sa.Table(
     "users",
     metadata,
     sa.Column(
         "id",
-        sa.Integer,
-        primary_key=True
+        sa.String,
+        primary_key=True,
+        server_default=text("gen_random_uuid()")
     ),
     sa.Column(
         "username",
-        sa.String(25),
-        unique=True
+        sa.String,
+        unique=True,
+        nullable=False
     ),
     sa.Column(
         "hashed_password",
-        sa.String(8)
+        sa.String,
+        nullable=False
     ),
     sa.Column(
-        "is_active",
+        "disable",
         sa.Boolean,
-        default=False
     ),
-    # sa.Column(
-    #     "role",
-    #     sa.Integer,
-    #     sa.ForeignKey("roles.id")
-    # ),
-    # sa.Column(
-    #     "created_at",
-    #     sa.TIMESTAMP(timezone=True),
-    #     server_default=sa.func.now(),
-    # ),
-    # sa.Column(
-    #     "updated_at",
-    #     sa.TIMESTAMP(timezone=True),
-    #     server_default=sa.func.now(),
-    #     onupdate=sa.func.now(),
-    # ),
+    sa.Column(
+        "email",
+        sa.String,
+        unique=True,
+        nullable=False
+    ),
+    sa.Column(
+        "created_at",
+        sa.TIMESTAMP(timezone=True),
+        server_default=text("now()"),
+    ),
+    sa.Column(
+        "updated_at",
+        sa.TIMESTAMP(timezone=True),
+        server_default=text("now()"),
+        onupdate=text("now()")
+    ),
 )
 
 engine = sa.create_engine(DATABASE_URL)

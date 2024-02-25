@@ -1,25 +1,25 @@
+import logging
 from fastapi import (
     Query,
-    Path,
-    Body,
-    Response,
     status,
     HTTPException,
     APIRouter,
+    Depends
 )
 from typing import List
-from app.schemas.graphs import Graph, GraphResponse
 from app.database.database import database, graphs
-import json
-import logging
-import math
 from app.services.graphs import NetGraph
 from app.schemas.graphs import Graph
+from app.api.dependencies.authentication import get_current_active_user
+from app.schemas.user import User
+from typing import Annotated
+
 
 router = APIRouter()
 
 @router.get("/{graph_id}/paths")
 async def trace_possible_paths(
+    _: Annotated[User, Depends(get_current_active_user)],
     graph_id: int,
     start: str,
     end: str,
@@ -55,6 +55,7 @@ async def trace_possible_paths(
 
 @router.get("/{graph_id}/shortest")
 async def trace_shortest_path(
+    _: Annotated[User, Depends(get_current_active_user)],
     graph_id: int,
     start: str,
     end: str,

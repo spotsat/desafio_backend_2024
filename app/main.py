@@ -1,9 +1,6 @@
-from fastapi import FastAPI, Depends
-from typing import Annotated
-# from app.schemas.core import Tags
-from app.database.database import database, users
-from app.routes import api
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import FastAPI
+from app.database.database import database
+from app.api.routes import api
 
 app = FastAPI(
     # summary="Geografos",
@@ -12,7 +9,6 @@ app = FastAPI(
 )
 
 app.include_router(api.router)
-
 
 
 @app.on_event("startup")

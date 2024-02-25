@@ -1,18 +1,25 @@
 from fastapi import (
-    Query, Path, Body, Response, status,
-    HTTPException, APIRouter
+    Query,
+    Path,
+    Body,
+    Response,
+    status,
+    HTTPException,
+    APIRouter,
+    Depends
 )
-from typing import List
+from typing import Annotated
 from app.schemas.graphs import Graph, GraphResponse
 from app.database.database import database, graphs
-import json
 import logging
-import math
+from app.api.dependencies.authentication import get_current_active_user
+from app.schemas.user import User
 
 router = APIRouter(prefix="/graphs")
 
 @router.post("/")
 async def create_graph(
+    _: Annotated[User, Depends(get_current_active_user)],
     graph: Graph = Body(
         ...,
         **Graph.model_config,
@@ -43,7 +50,8 @@ async def create_graph(
     response_description="Detalhes do grafo",
 )
 async def view_graph_by_id(
-    graph_id: int = Path(..., title="id da entrada"),
+    _: Annotated[User, Depends(get_current_active_user)],
+    graph_id: int = Path(..., title="id da entrada")
 ):
     """
     Mostra detalhamento de um grafo pelo id.
@@ -72,6 +80,7 @@ async def view_graph_by_id(
     # response_model=List[GraphResponse],
 )
 async def view_graphs(
+    _: Annotated[User, Depends(get_current_active_user)],
     limit: int = Query(default=10, ge=1, le=50),
     recent: bool = False
 ):
@@ -92,11 +101,11 @@ async def view_graphs(
 
 @router.put("/{graph_id}", status_code=status.HTTP_202_ACCEPTED)
 async def update_graph(
-        graph_id: int = Path(..., title="Id do grafo"),
-        graph: Graph = Body(
-        ...,
-        **Graph.model_config,
-
+    _: Annotated[User, Depends(get_current_active_user)],
+    graph_id: int = Path(..., title="Id do grafo"),
+    graph: Graph = Body(
+    ...,
+    **Graph.model_config,
 )) -> GraphResponse:
     """
     Altera um grafo.
@@ -130,7 +139,8 @@ async def update_graph(
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_graph(
-        graph_id: int = Path(..., title="Id do grafo"),
+    _: Annotated[User, Depends(get_current_active_user)],
+    graph_id: int = Path(..., title="Id do grafo"),
 ):
     """
     Deleta um grafo.

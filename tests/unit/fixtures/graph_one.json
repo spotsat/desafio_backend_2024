@@ -1,0 +1,82 @@
+{
+    "nodes": [
+      {
+        "name": "A",
+        "coordinate": {
+          "latitude": 0,
+          "longitude": 0
+        }
+      },
+      {
+        "name": "B",
+        "coordinate": {
+          "latitude": 4.0,
+          "longitude": 2.0
+        }
+      },
+      {
+        "name": "C",
+        "coordinate": {
+          "latitude": 2.0,
+          "longitude": 3.0
+        }
+      },
+      {
+        "name": "D",
+        "coordinate": {
+          "latitude": 0,
+          "longitude": 5.0
+        }
+      },
+      {
+        "name": "E",
+        "coordinate": {
+          "latitude": 2.0,
+          "longitude": 6.0
+        }
+      },
+      {
+        "name": "F",
+        "coordinate": {
+          "latitude": -1,
+          "longitude": 2.0
+        }
+      },
+      {
+        "name": "G",
+        "coordinate": {
+          "latitude": -3,
+          "longitude": 0
+        }
+      },
+      {
+        "name": "H",
+        "coordinate": {
+          "latitude": -4.0,
+          "longitude": 3.0
+        }
+      },
+      {
+        "name": "I",
+        "coordinate": {
+          "latitude": -3.0,
+          "longitude": -3.0
+        }
+      },
+      {
+        "name": "J",
+        "coordinate": {
+          "latitude": 1.0,
+          "longitude": -3.0
+        }
+      }
+    ],
+    "edges": [
+      [
+        "A",
+        "B"
+      ],
+      ["A","C"], ["A", "J"], ["A", "F"], ["A", "G"], ["A", "I"], ["C", "J"], ["C", "D"], ["D", "E"],
+      ["E", "I"], ["F", "G"], ["G", "H"]
+    ]
+  }
