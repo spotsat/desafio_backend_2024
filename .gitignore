@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+
+# IDE (por exemplo, PyCharm)
+.idea/
+
+# Arquivos de configuração
+*.pyc
+.DS_Store
